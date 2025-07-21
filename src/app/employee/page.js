@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import Badge from '@/app/(components)/Badge';
 
-const EmployeePage = ({ params }) => {
+const EmployeePage = () => {
+  const params = useParams();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
@@ -12,15 +14,22 @@ const EmployeePage = ({ params }) => {
     const fetchUser = async () => {
       const res = await fetch(`https://dummyjson.com/users/${params.id}`);
       const data = await res.json();
-      setUser({
-        ...data,
-        department: ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
-        rating: Math.floor(Math.random() * 5) + 1,
-      });
+      setUser(data);
       setLoading(false);
     };
     fetchUser();
   }, [params.id]);
+
+  // Set random department and rating only on client after user is loaded
+  useEffect(() => {
+    if (user && !user.department && !user.rating) {
+      setUser((prev) => ({
+        ...prev,
+        department: ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
+        rating: Math.floor(Math.random() * 5) + 1,
+      }));
+    }
+  }, [user]);
 
   const getRatingBadgeColor = (rating) => {
     if (rating >= 4) return 'bg-green-500';

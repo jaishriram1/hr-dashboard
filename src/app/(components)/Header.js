@@ -1,17 +1,26 @@
-import { Sun, Moon } from "lucide-react"; // Optional: Install lucide-react for icons
+import Link from 'next/link';
+import ThemeSwitcher from './ThemeSwitcher';
 
-export default function Header() {
+const Header = () => {
   return (
-    <header className="flex justify-between items-center px-6 py-4 bg-gray-800 text-white shadow-md">
-      <h1 className="text-2xl font-bold">HR Dashboard</h1>
-      <nav className="flex gap-6">
-        <a href="/" className="hover:text-gray-300">Home</a>
-        <a href="/bookmarks" className="hover:text-gray-300">Bookmarks</a>
-        <a href="/analytics" className="hover:text-gray-300">Analytics</a>
+    <header className="flex items-center justify-between p-4 bg-gray-800 shadow-md dark:bg-gray-800">
+      <div className="text-2xl font-bold shadow-lg dark:text-gray-100 text-white">
+        <Link href="/">HR DASHBOARD</Link>
+      </div>
+      <nav className="flex items-center space-x-4">
+        <Link href="/" className="text-gray-500 hover:text-blue-500 dark:text-gray-300">
+          Home
+        </Link>
+        <Link href="/bookmarks" className="text-gray-500 hover:text-blue-500 dark:text-gray-300">
+          Bookmarks
+        </Link>
+        <Link href="/analytics" className="text-gray-500 hover:text-blue-500 dark:text-gray-300">
+          Analytics
+        </Link>
+        <ThemeSwitcher /> {}
       </nav>
-      <button className="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
-        <Sun className="w-5 h-5" /> {/* Replace with theme logic */}
-      </button>
     </header>
   );
-}
+};
+
+export default Header;

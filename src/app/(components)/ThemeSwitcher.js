@@ -32,10 +32,12 @@ const ThemeSwitcher = () => {
   }
 
   return (
-    <button onClick={toggleTheme} className="ml-4 p-2 rounded bg-gray-200 dark:bg-gray-700">
-  {theme === 'light' ? <Moon /> : <Sun />}
-</button>
-
+    <button
+      onClick={toggleTheme}
+      className="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md dark:bg-gray-700 dark:text-gray-200"
+    >
+      {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+    </button>
   );
 };
 

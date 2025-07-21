@@ -5,12 +5,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light'); // Default theme, you might want to load from localStorage
+  const [theme, setTheme] = useState('light');
 
-  // useEffect to handle theme loading from localStorage and applying to document element
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
-    // Check for user preference (e.g., system dark mode) if no stored theme
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     if (storedTheme) {
@@ -41,7 +39,6 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the theme context
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {

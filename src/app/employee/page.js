@@ -1,4 +1,3 @@
-// /src/app/employee/[id]/page.js
 
 import Badge from '@/app/(components)/Badge';
 import Image from 'next/image';

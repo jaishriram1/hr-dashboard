@@ -1,4 +1,3 @@
-// /src/app/employee/[id]/page.js
 
 import Badge from '@/app/(components)/Badge';
 import Image from 'next/image';
@@ -19,7 +18,7 @@ const getRatingBadgeColor = (rating) => {
 };
 
 export async function generateStaticParams() {
-  const res = await fetch('https://dummyjson.com/users');
+  const res = await fetch('https://dummyjson.com/users?limit=20');
   const data = await res.json();
   return data.users.map((user) => ({ id: user.id.toString() }));
 }

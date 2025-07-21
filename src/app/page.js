@@ -14,19 +14,34 @@ const HomePage = () => {
   const [newUser, setNewUser] = useState({ name: '', email: '', department: '', rating: 1 });
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await fetch('https://dummyjson.com/users?limit=20');
-      const data = await res.json();
-      const usersWithDept = data.users.map((user) => ({
-        ...user,
-        department: ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
-        rating: Math.floor(Math.random() * 5) + 1,
-      }));
-      setUsers(usersWithDept);
+    // Load users from localStorage if available
+    const localUsers = localStorage.getItem('users');
+    if (localUsers) {
+      setUsers(JSON.parse(localUsers));
       setLoading(false);
-    };
-    fetchUsers();
+    } else {
+      const fetchUsers = async () => {
+        const res = await fetch('https://dummyjson.com/users?limit=20');
+        const data = await res.json();
+        const usersWithDept = data.users.map((user) => ({
+          ...user,
+          department: ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
+          rating: Math.floor(Math.random() * 5) + 1,
+        }));
+        setUsers(usersWithDept);
+        localStorage.setItem('users', JSON.stringify(usersWithDept));
+        setLoading(false);
+      };
+      fetchUsers();
+    }
   }, []);
+
+  // Save users to localStorage whenever users state changes
+  useEffect(() => {
+    if (users.length > 0) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+  }, [users]);
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => {
@@ -90,35 +105,43 @@ const HomePage = () => {
           <input
             type="text"
             placeholder="Name"
+            value={newUser.name}
+            onChange={e => setNewUser({ ...newUser, name: e.target.value })}
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           />
           <input
             type="email"
             placeholder="Email"
+            value={newUser.email}
+            onChange={e => setNewUser({ ...newUser, email: e.target.value })}
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           />
           <input
             type="text"
             placeholder="Department"
+            value={newUser.department}
+            onChange={e => setNewUser({ ...newUser, department: e.target.value })}
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           />
           <input
             type="number"
             placeholder="Rating (1-5)"
+            value={newUser.rating}
+            min={1}
+            max={5}
+            onChange={e => setNewUser({ ...newUser, rating: parseInt(e.target.value) })}
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           />
         </div>
         <Button
           onClick={() => {
-            setButtonClicked(true);
-            setNewUser({
-              name: '',
-              email: '',
-              department: '',
-              rating: 1
-            });
-            // Here you would typically handle form submission, e.g., sending data to an API
-            console.log('Form submitted');
+            // Basic Validation
+            if (!newUser.name || !newUser.email || !newUser.department || newUser.rating < 1 || newUser.rating > 5) {
+              alert('Please fill all fields correctly.');
+              return;
+            }
+            setUsers([...users, { ...newUser, id: users.length + 1 }]);
+            setNewUser({ name: '', email: '', department: '', rating: 1 });
             setIsModalOpen(false);
           }}
           className="mt-4"

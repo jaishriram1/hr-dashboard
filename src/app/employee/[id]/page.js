@@ -1,48 +1,44 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import Badge from '@/app/(components)/Badge';
+import Image from 'next/image';
 
-const EmployeePage = () => {
-  const params = useParams();
-  const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [loading, setLoading] = useState(true);
+export async function generateStaticParams() {
+  const res = await fetch('https://dummyjson.com/users?limit=10');
+  const data = await res.json();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch(`https://dummyjson.com/users/${params.id}`);
-      const data = await res.json();
-      setUser(data);
-      setLoading(false);
-    };
-    fetchUser();
-  }, [params.id]);
+  return data.users.map((user) => ({
+    id: user.id.toString(),
+  }));
+}
 
-  // Set random department and rating only on client after user is loaded
-  useEffect(() => {
-    if (user && !user.department && !user.rating) {
-      setUser((prev) => ({
-        ...prev,
-        department: ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
-        rating: Math.floor(Math.random() * 5) + 1,
-      }));
-    }
-  }, [user]);
+const getRatingBadgeColor = (rating) => {
+  if (rating >= 4) return 'bg-green-500';
+  if (rating >= 3) return 'bg-yellow-500';
+  return 'bg-red-500';
+};
 
-  const getRatingBadgeColor = (rating) => {
-    if (rating >= 4) return 'bg-green-500';
-    if (rating >= 3) return 'bg-yellow-500';
-    return 'bg-red-500';
+export default async function EmployeePage({ params }) {
+  const res = await fetch(`https://dummyjson.com/users/${params.id}`);
+  const userData = await res.json();
+
+  // Inject random fields if not present
+  const user = {
+    ...userData,
+    department:
+      userData.department ||
+      ['Engineering', 'Marketing', 'Sales', 'HR'][Math.floor(Math.random() * 4)],
+    rating: userData.rating || Math.floor(Math.random() * 5) + 1,
   };
-
-  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div className="flex items-center space-x-4">
-        <img src={user.image} alt={user.firstName} className="w-24 h-24 rounded-full" />
+        <Image
+          src={user.image}
+          alt={user.firstName}
+          width={96}
+          height={96}
+          className="w-24 h-24 rounded-full"
+        />
         <div>
           <h1 className="text-3xl font-bold">{`${user.firstName} ${user.lastName}`}</h1>
           <p className="text-gray-500 dark:text-gray-400">{user.email}</p>
@@ -61,61 +57,26 @@ const EmployeePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Tabs */}
       <div className="mt-6">
         <div className="flex border-b border-gray-200 dark:border-gray-700">
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 font-semibold ${
-              activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-500' : ''
-            }`}
-          >
-            Overview
-          </button>
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`px-4 py-2 font-semibold ${
-              activeTab === 'projects' ? 'border-b-2 border-blue-500 text-blue-500' : ''
-            }`}
-          >
-            Projects
-          </button>
-          <button
-            onClick={() => setActiveTab('feedback')}
-            className={`px-4 py-2 font-semibold ${
-              activeTab === 'feedback' ? 'border-b-2 border-blue-500 text-blue-500' : ''
-            }`}
-          >
-            Feedback
-          </button>
+          {['overview', 'projects', 'feedback'].map((tab) => (
+            <div
+              key={tab}
+              className="px-4 py-2 font-semibold text-blue-500 border-b-2 border-blue-500 capitalize"
+            >
+              {tab}
+            </div>
+          ))}
         </div>
         <div className="p-4 mt-4">
-          {activeTab === 'overview' && (
-            <div>
-              <h3 className="text-xl font-bold">Details</h3>
-              <p>Address: {`${user.address.address}, ${user.address.city}`}</p>
-              <p>Phone: {user.phone}</p>
-              <p>Department: {user.department}</p>
-            </div>
-          )}
-          {activeTab === 'projects' && (
-            <div>
-              <h3 className="text-xl font-bold">Projects</h3>
-              <ul>
-                <li>Project A: E-commerce Platform</li>
-                <li>Project B: Internal CRM Tool</li>
-              </ul>
-            </div>
-          )}
-          {activeTab === 'feedback' && (
-            <div>
-              <h3 className="text-xl font-bold">Feedback</h3>
-              <p>No feedback yet.</p>
-            </div>
-          )}
+          <h3 className="text-xl font-bold">Details</h3>
+          <p>Address: {`${user.address.address}, ${user.address.city}`}</p>
+          <p>Phone: {user.phone}</p>
+          <p>Department: {user.department}</p>
         </div>
       </div>
     </div>
   );
-};
-
-export default EmployeePage;
+}

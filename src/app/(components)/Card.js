@@ -14,7 +14,7 @@ const Card = ({ user }) => {
   const isBookmarked = bookmarks.some((bookmark) => bookmark.id === user.id);
 
   const handleBookmark = (e) => {
-    e.stopPropagation();
+    //e.stopPropagation();
     if (isBookmarked) {
       removeBookmark(user.id);
     } else {
@@ -22,9 +22,8 @@ const Card = ({ user }) => {
     }
   };
 
-
   const handlePromote = (e) => {
-    e.stopPropagation();
+    //e.stopPropagation();
     setIsFeedbackOpen(true);
   };
 
@@ -41,9 +40,7 @@ const Card = ({ user }) => {
 
   return (
     <div>
-      <Link
-        href={`/employee/${user.id}`}
-        className="block p-4 bg-white rounded-lg shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow duration-200 hover:ring-2 hover:ring-blue-500"
+      <div className="block p-4 bg-white rounded-lg shadow-md dark:bg-gray-800 hover:shadow-lg transition-shadow duration-200 hover:ring-2 hover:ring-blue-500"
       >
         <div className="flex items-center space-x-4">
           <Image
@@ -78,9 +75,9 @@ const Card = ({ user }) => {
             ))}
           </div>
           <div className="flex space-x-2">
-            <Button onClick={handlePromote} className="text-sm bg-indigo-500 hover:bg-indigo-600">
+            <Link href={`/employee/${user.id}`} className="px-4 py-2 font-semibold text-grey bg-blue-500 rounded-md bg-indigo-500 hover:bg-indigo-600">
               Promote
-            </Button>
+            </Link>
             <Button
               onClick={handleBookmark}
               className={`text-sm ${isBookmarked ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500'}`}
@@ -89,22 +86,8 @@ const Card = ({ user }) => {
             </Button>
           </div>
         </div>
-      </Link>
-      {/* Feedback Modal rendered outside the Link to prevent closing issues */}
-      <Modal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)}>
-        <h3 className="text-lg font-bold mb-2">Write Feedback for {user.name ? user.name : `${user.firstName || ''} ${user.lastName || ''}`}</h3>
-        <textarea
-          value={feedback}
-          onChange={e => setFeedback(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 mb-2"
-          rows={4}
-          placeholder="Enter feedback here..."
-        />
-        <div className="flex justify-end space-x-2">
-          <Button onClick={() => setIsFeedbackOpen(false)} className="bg-gray-400 hover:bg-gray-500">Cancel</Button>
-          <Button onClick={handleFeedbackSubmit} className="bg-blue-500 hover:bg-blue-600">Save</Button>
-        </div>
-      </Modal>
+      </div>
+      
     </div>
   );
 };

@@ -14,7 +14,6 @@ const Card = ({ user }) => {
   const isBookmarked = bookmarks.some((bookmark) => bookmark.id === user.id);
 
   const handleBookmark = (e) => {
-    //e.stopPropagation();
     if (isBookmarked) {
       removeBookmark(user.id);
     } else {
@@ -23,7 +22,6 @@ const Card = ({ user }) => {
   };
 
   const handlePromote = (e) => {
-    //e.stopPropagation();
     setIsFeedbackOpen(true);
   };
 
@@ -36,7 +34,6 @@ const Card = ({ user }) => {
     alert('Feedback saved!');
   };
 
-  // (Removed duplicate handleFeedbackSubmit)
 
   return (
     <div>
@@ -52,7 +49,7 @@ const Card = ({ user }) => {
           />
           <div>
             <h2 className="text-xl font-bold">{user.name ? user.name : `${user.firstName || ''} ${user.lastName || ''}`}</h2>
-            {/* Show feedback if exists */}
+           
             {(() => {
               const feedbacks = JSON.parse(typeof window !== 'undefined' ? localStorage.getItem('feedbacks') || '{}' : '{}');
               if (feedbacks[user.id]) {

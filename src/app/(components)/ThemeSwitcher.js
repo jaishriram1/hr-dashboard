@@ -7,16 +7,13 @@ const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
-  // This useEffect ensures the component only renders on the client, preventing hydration mismatch.
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // No need for manual style changes or complex useEffects.
-  // next-themes handles everything automatically by toggling the 'dark' class on the <html> element.
-
+  
   if (!mounted) {
-    return null; // Render nothing on the server
+    return null;
   }
 
   return (

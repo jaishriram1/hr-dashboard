@@ -3,7 +3,7 @@ import EmployeeTabs from '@/app/EmployeeTabs';
 export async function generateStaticParams() {
   const res = await fetch('https://dummyjson.com/users?limit=30');
   const data = await res.json();
-
+  
   return data.users.map((user) => ({
     id: user.id.toString(),
   }));

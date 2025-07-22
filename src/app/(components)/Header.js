@@ -15,7 +15,7 @@ const Header = () => {
           Bookmarks
         </Link>
         <Link href="/analytics" className="text-gray-500 hover:text-blue-500 dark:text-gray-300">
-          Analytics
+          Chart
         </Link>
         <ThemeSwitcher /> {}
       </nav>

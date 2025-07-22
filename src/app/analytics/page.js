@@ -33,7 +33,7 @@ const AnalyticsPage = () => {
           {
             label: 'Average Rating',
             data: avgRatings,
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            backgroundColor: 'rgba(235, 54, 57, 0.6)',
           },
         ],
       });

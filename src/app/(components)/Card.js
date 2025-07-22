@@ -31,39 +31,51 @@ const Card = ({ user }) => {
   };
 
   return (
-    <div className="bg-white/60 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:ring-2 hover:ring-indigo-400 p-6 space-y-4">
-      <div className="flex items-center gap-5">
+    <div className="bg-white/80 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-dg transition-all duration-300 hover:shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className="flex items-center gap-3">
         <Image
           src={user.image && user.image !== '' ? user.image : '/default-avatar.png'}
           alt={user.firstName || 'User'}
-          width={64}
-          height={64}
-          className="rounded-full ring-2 ring-indigo-400"
+          width={60}
+          height={60}
+          className="rounded-full ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-800 ring-indigo-300"
         />
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <div className="flex-1">
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
             {user.name || `${user.firstName || ''} ${user.lastName || ''}`}
           </h2>
-          {(() => {
-            const feedbacks = JSON.parse(typeof window !== 'undefined' ? localStorage.getItem('feedbacks') || '{}' : '{}');
-            if (feedbacks[user.id]) {
-              return <p className="text-sm text-green-600 dark:text-green-400 mt-1">Feedback: {feedbacks[user.id]}</p>;
-            }
-            return null;
-          })()}
-          <p className="text-gray-600 dark:text-gray-400 text-sm">{user.email}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-300">
-            Age: {user.age} | Dept: {user.department}
-          </p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">{user.email}</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex">
+      <div className="my-4 border-t border-gray-200 dark:border-gray-600"></div>
+
+      <div className="space-y-2 text-sm">
+        <p className="text-gray-600 dark:text-gray-300">
+          <span className="font-medium text-gray-700 dark:text-gray-200">Age:</span> {user.age}
+        </p>
+        <p className="text-gray-600 dark:text-gray-300">
+          <span className="font-medium text-gray-700 dark:text-gray-200">Dept:</span> {user.department}
+        </p>
+        {(() => {
+          const feedbacks = JSON.parse(typeof window !== 'undefined' ? localStorage.getItem('feedbacks') || '{}' : '{}');
+          if (feedbacks[user.id]) {
+            return (
+              <p className="text-sm text-green-600 dark:text-green-400 pt-1">
+                <span className="font-medium">Feedback: </span>{feedbacks[user.id]}
+              </p>
+            );
+          }
+          return null;
+        })()}
+      </div>
+
+      <div className="mt-5 flex items-center justify-between">
+        <div className="flex items-center">
           {[...Array(5)].map((_, i) => (
             <svg
               key={i}
-              className={`w-5 h-5 ${i < user.rating ? 'text-green-400' : 'text-gray-300'}`}
+              className={`w-5 h-5 ${i < user.rating ? 'text-amber-400' : 'text-gray-300 dark:text-gray-500'}`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -75,20 +87,19 @@ const Card = ({ user }) => {
         <div className="flex gap-2">
           <Link
             href={`/employee/${user.id}`}
-            className="px-4 py-2 rounded-lg bg-amber-400 text-white text-sm font-medium hover:bg-amber-500 transition"
+            className="px-4 py-2 rounded-md bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-600 transition-colors"
           >
             Promote
           </Link>
-          <Button
+          <button
             onClick={handleBookmark}
-            className={`text-sm px-4 py-2 rounded-lg transition font-medium ${
-              isBookmarked
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white'
-            }`}
+            className={`text-sm px-4 py-2 rounded-md transition-colors font-medium ${isBookmarked
+                ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-800/80'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+              }`}
           >
             {isBookmarked ? 'Bookmarked' : 'Bookmark'}
-          </Button>
+          </button>
         </div>
       </div>
     </div>
